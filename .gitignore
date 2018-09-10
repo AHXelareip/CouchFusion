@@ -5,3 +5,5 @@
 /.vs
 /Builds
 /.idea
+/obj
+/Assets/Plugins/Editor/JetBrains
