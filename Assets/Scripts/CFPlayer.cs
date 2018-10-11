@@ -21,6 +21,7 @@ public class CFPlayer : MonoBehaviour
 	
 	public Rigidbody rig;
 	public GameObject soloGo;
+	public Animator playerAnimator;
 	
 	void Update ()
 	{
@@ -29,9 +30,21 @@ public class CFPlayer : MonoBehaviour
 		
 		currentSpeed = Input.GetAxis("P" + playerId + "_Horizontal") * speed;
 
+		if (currentSpeed > 0)
+		{
+			soloGo.transform.rotation = Quaternion.LookRotation(Vector3.back);
+		}
+		else
+		{
+			soloGo.transform.rotation = Quaternion.LookRotation(Vector3.forward);
+		}
+		
+		playerAnimator.SetBool("Walk", Mathf.Abs(currentSpeed) > 0.001f);
+		playerAnimator.SetFloat("Speed", Mathf.Abs(currentSpeed));
+		
 		if (fused == false)
 		{
-			transform.position += Vector3.right * currentSpeed * Time.deltaTime;	
+			//soloGo.transform.position += Vector3.right * currentSpeed * Time.deltaTime;	
 		}
 
 		if (Input.GetButtonDown("P" + playerId + "_Jump"))
