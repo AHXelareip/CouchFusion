@@ -34,7 +34,7 @@ public class CFPlayer : MonoBehaviour
 		{
 			soloGo.transform.rotation = Quaternion.LookRotation(Vector3.back);
 		}
-		else
+		else if (currentSpeed < 0)
 		{
 			soloGo.transform.rotation = Quaternion.LookRotation(Vector3.forward);
 		}
