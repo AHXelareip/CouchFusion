@@ -22,8 +22,23 @@ public class CFPlayer : MonoBehaviour
 	public Rigidbody rig;
 	public GameObject soloGo;
 	public Animator playerAnimator;
-	
-	void Update ()
+    public CollisionSignal collisionSignal;
+
+    private void Start()
+    {
+        collisionSignal.collisionEnter += OnSignalCollisionEnter;
+        collisionSignal.collisionExit += OnSignalCollisionExit;
+        collisionSignal.collisionStay += OnSignalCollisionStay;
+    }
+
+    private void OnDestroy()
+    {
+        collisionSignal.collisionEnter -= OnSignalCollisionEnter;
+        collisionSignal.collisionExit -= OnSignalCollisionExit;
+        collisionSignal.collisionStay += OnSignalCollisionStay;
+    }
+
+    void Update ()
 	{
 		unfuse = false;
 		soloGo.SetActive(fused == false);
@@ -39,13 +54,12 @@ public class CFPlayer : MonoBehaviour
 			soloGo.transform.rotation = Quaternion.LookRotation(Vector3.forward);
 		}
 		
-		playerAnimator.SetBool("Walk", Mathf.Abs(currentSpeed) > 0.001f);
-		playerAnimator.SetFloat("Speed", Mathf.Abs(currentSpeed));
+        if (fused == false)
+        {
+            playerAnimator.SetBool("Walk", Mathf.Abs(currentSpeed) > 0.001f);
+            playerAnimator.SetFloat("Speed", Mathf.Abs(currentSpeed));
+        }
 		
-		if (fused == false)
-		{
-			//soloGo.transform.position += Vector3.right * currentSpeed * Time.deltaTime;	
-		}
 
 		if (Input.GetButtonDown("P" + playerId + "_Jump"))
 		{
@@ -69,15 +83,31 @@ public class CFPlayer : MonoBehaviour
 		if (fused == false)
 		{
 			rig.AddForce(Vector3.up * jumpSpeed);
-			//canJump = false;
+			canJump = false;
 		}
 	}
 
-	private void OnCollisionEnter(Collision other)
+    private void OnSignalCollisionEnter(CollisionSignal signal,  Collision other)
 	{
 		if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Player")
 		{
 			canJump = true;
 		}
 	}
+
+    private void OnSignalCollisionStay(CollisionSignal signal, Collision other)
+    {
+        if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Player")
+        {
+            rig.useGravity = false;
+        }
+    }
+
+    private void OnSignalCollisionExit(CollisionSignal signal, Collision other)
+    {
+        if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Player")
+        {
+            rig.useGravity = true;
+        }
+    }
 }

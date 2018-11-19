@@ -14,15 +14,29 @@ public class CFFusedPlayer : MonoBehaviour
 
 	public Rigidbody rig;
 	public GameObject visual;
+    
+    public Animator playerAnimator;
+    public CollisionSignal collisionSignal;
 
-	void Start()
+    void Start()
 	{
 		fusedPlayers[0].fused = true;
 		fusedPlayers[1].fused = true;
 		visual.transform.position = (fusedPlayers[0].soloGo.transform.position + fusedPlayers[1].soloGo.transform.position) / 2;
-	}
-	
-	void Update ()
+
+        collisionSignal.collisionEnter += OnSignalCollisionEnter;
+        collisionSignal.collisionExit += OnSignalCollisionExit;
+        collisionSignal.collisionStay += OnSignalCollisionStay;
+    }
+
+    private void OnDestroy()
+    {
+        collisionSignal.collisionEnter -= OnSignalCollisionEnter;
+        collisionSignal.collisionExit -= OnSignalCollisionExit;
+        collisionSignal.collisionStay += OnSignalCollisionStay;
+    }
+
+    void Update ()
 	{
 		foreach (CFPlayer fusedPlayer in fusedPlayers)
 		{
@@ -49,9 +63,19 @@ public class CFFusedPlayer : MonoBehaviour
 		move /= fusedPlayers.Count;
 		move *= 1.5f;
 
-		transform.position += Vector3.right * move * Time.deltaTime;
-		
-		bool jump = true;
+        if (move > 0)
+        {
+            visual.transform.rotation = Quaternion.LookRotation(Vector3.back);
+        }
+        else if (move < 0)
+        {
+            visual.transform.rotation = Quaternion.LookRotation(Vector3.forward);
+        }
+
+        playerAnimator.SetBool("Walk", Mathf.Abs(move) > 0.001f);
+        playerAnimator.SetFloat("Speed", Mathf.Abs(move));
+
+        bool jump = true;
 		foreach (CFPlayer fusedPlayer in fusedPlayers)
 		{
 			if (Time.time - fusedPlayer.jumpTime > jumpSyncTime)
@@ -61,7 +85,7 @@ public class CFFusedPlayer : MonoBehaviour
 			}
 		}
 
-		canJump = rig.velocity.magnitude < 0.1f;
+		//canJump = rig.velocity.magnitude < 0.1f;
 		
 		if (jump && canJump)
 		{
@@ -78,13 +102,29 @@ public class CFFusedPlayer : MonoBehaviour
 	{
 		rig.AddForce(Vector3.up * jumpSpeed);
 		canJump = false;
-	}
+    }
 
-	private void OnCollisionEnter(Collision other)
-	{
-		if (other.gameObject.tag == "Ground")
-		{
-			canJump = true;
-		}
-	}
+    private void OnSignalCollisionEnter(CollisionSignal signal, Collision other)
+    {
+        if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Player")
+        {
+            canJump = true;
+        }
+    }
+
+    private void OnSignalCollisionStay(CollisionSignal signal, Collision other)
+    {
+        if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Player")
+        {
+            rig.useGravity = false;
+        }
+    }
+
+    private void OnSignalCollisionExit(CollisionSignal signal, Collision other)
+    {
+        if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Player")
+        {
+            rig.useGravity = true;
+        }
+    }
 }
