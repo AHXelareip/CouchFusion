@@ -22,6 +22,7 @@ public class CFPlayer : MonoBehaviour
 	public Rigidbody rig;
 	public GameObject soloGo;
 	public Animator playerAnimator;
+    public CFPlayerAnimController animatorController;
     public CollisionSignal collisionSignal;
 
     private void Start()
@@ -29,6 +30,7 @@ public class CFPlayer : MonoBehaviour
         collisionSignal.collisionEnter += OnSignalCollisionEnter;
         collisionSignal.collisionExit += OnSignalCollisionExit;
         collisionSignal.collisionStay += OnSignalCollisionStay;
+        animatorController.OnEndJump += OnEndJump;
     }
 
     private void OnDestroy()
@@ -42,10 +44,10 @@ public class CFPlayer : MonoBehaviour
 	{
 		unfuse = false;
 		soloGo.SetActive(fused == false);
-		
-		currentSpeed = Input.GetAxis("P" + playerId + "_Horizontal") * speed;
+        
+        currentSpeed = Input.GetAxis("P" + playerId + "_Horizontal") * speed;
 
-		if (currentSpeed > 0)
+        if (currentSpeed > 0)
 		{
 			soloGo.transform.rotation = Quaternion.LookRotation(Vector3.back);
 		}
@@ -56,8 +58,22 @@ public class CFPlayer : MonoBehaviour
 		
         if (fused == false)
         {
-            playerAnimator.SetBool("Walk", Mathf.Abs(currentSpeed) > 0.001f);
-            playerAnimator.SetFloat("Speed", Mathf.Abs(currentSpeed));
+            if (canJump == false)
+            {
+                currentSpeed = Input.GetAxis("P" + playerId + "_Horizontal") * jumpSpeed;
+                AnimatorTransitionInfo transitionInfo = playerAnimator.GetAnimatorTransitionInfo(0);
+                
+                if (transitionInfo.duration == 0)
+                {
+                    soloGo.transform.position += currentSpeed * Time.deltaTime * Vector3.right;
+                }
+                playerAnimator.SetBool("Walk", false);
+            }
+            else
+            {
+                playerAnimator.SetBool("Walk", Mathf.Abs(currentSpeed) > 0.001f);
+                playerAnimator.SetFloat("Speed", Mathf.Abs(currentSpeed));
+            }
         }
 		
 
@@ -82,7 +98,7 @@ public class CFPlayer : MonoBehaviour
 	{
 		if (fused == false)
 		{
-			rig.AddForce(Vector3.up * jumpSpeed);
+            playerAnimator.SetTrigger("Jump");
 			canJump = false;
 		}
 	}
@@ -107,7 +123,13 @@ public class CFPlayer : MonoBehaviour
     {
         if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Player")
         {
-            rig.useGravity = true;
+            //rig.useGravity = true;
         }
+    }
+
+    public void OnEndJump()
+    {
+        playerAnimator.SetTrigger("EndJump");
+        rig.useGravity = true;
     }
 }
