@@ -1525,6 +1525,7 @@ GameObject:
   - component: {fileID: 54415466653802032}
   - component: {fileID: 136822176669024508}
   - component: {fileID: 114859601418624450}
+  - component: {fileID: 114748432506675576}
   m_Layer: 0
   m_Name: PlayerObj
   m_TagString: Untagged
@@ -3922,14 +3923,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1baa1616aea04e24bad5f75df10fb9d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpSyncTime: 1
-  jumpSpeed: 800
+  jumpSyncTime: 0.5
+  jumpSpeed: 4
   fusedPlayers: []
   canJump: 0
   rig: {fileID: 54415466653802032}
   visual: {fileID: 1787822637156260}
   playerAnimator: {fileID: 95618479539089258}
+  animatorController: {fileID: 114748432506675576}
   collisionSignal: {fileID: 114859601418624450}
+--- !u!114 &114748432506675576
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1787822637156260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05b83afa4dc3f8941a8790575fdfbd3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114859601418624450
 MonoBehaviour:
   m_ObjectHideFlags: 1

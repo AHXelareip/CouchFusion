@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class CFFusedPlayer : MonoBehaviour
 {
-	public float jumpSyncTime = 1.0f;
-	public float jumpSpeed = 800.0f;
+	public float jumpSyncTime;
+	public float jumpSpeed;
 	
 	public List<CFPlayer> fusedPlayers = new List<CFPlayer>();
 	public bool canJump;
@@ -16,6 +16,7 @@ public class CFFusedPlayer : MonoBehaviour
 	public GameObject visual;
     
     public Animator playerAnimator;
+    public CFPlayerAnimController animatorController;
     public CollisionSignal collisionSignal;
 
     void Start()
@@ -27,13 +28,17 @@ public class CFFusedPlayer : MonoBehaviour
         collisionSignal.collisionEnter += OnSignalCollisionEnter;
         collisionSignal.collisionExit += OnSignalCollisionExit;
         collisionSignal.collisionStay += OnSignalCollisionStay;
+        animatorController.OnEndJump += OnEndJump;
     }
 
     private void OnDestroy()
     {
         collisionSignal.collisionEnter -= OnSignalCollisionEnter;
         collisionSignal.collisionExit -= OnSignalCollisionExit;
-        collisionSignal.collisionStay += OnSignalCollisionStay;
+        collisionSignal.collisionStay -= OnSignalCollisionStay;
+        animatorController.OnEndJump -= OnEndJump;
+
+        CFFusionManager.Instance.fusedPlayers.Clear();
     }
 
     void Update ()
@@ -45,7 +50,7 @@ public class CFFusedPlayer : MonoBehaviour
 				for (int playerIdx = 0; playerIdx < fusedPlayers.Count; ++playerIdx)
 				{
 					fusedPlayers[playerIdx].fused = false;
-					fusedPlayers[playerIdx].soloGo.transform.position = visual.transform.position + Vector3.up * playerIdx;
+					fusedPlayers[playerIdx].soloGo.transform.position = visual.transform.position + Vector3.up * playerIdx * 2.0f;
 					fusedPlayers[playerIdx].soloGo.SetActive(true);
 				}
 				DestroyImmediate(gameObject);
@@ -72,8 +77,6 @@ public class CFFusedPlayer : MonoBehaviour
             visual.transform.rotation = Quaternion.LookRotation(Vector3.forward);
         }
 
-        playerAnimator.SetBool("Walk", Mathf.Abs(move) > 0.001f);
-        playerAnimator.SetFloat("Speed", Mathf.Abs(move));
 
         bool jump = true;
 		foreach (CFPlayer fusedPlayer in fusedPlayers)
@@ -96,12 +99,30 @@ public class CFFusedPlayer : MonoBehaviour
 
 			Jump();
 		}
-	}
+
+        if (canJump == false)
+        {
+            AnimatorTransitionInfo transitionInfo = playerAnimator.GetAnimatorTransitionInfo(0);
+
+            if (transitionInfo.duration == 0)
+            {
+                visual.transform.position += jumpSpeed * move * Time.deltaTime * Vector3.right;
+            }
+            playerAnimator.SetBool("Walk", false);
+            playerAnimator.SetFloat("Speed", 1.0f);
+        }
+        else
+        {
+            playerAnimator.SetBool("Walk", Mathf.Abs(move) > 0.001f);
+            playerAnimator.SetFloat("Speed", Mathf.Abs(move));
+        }
+    }
 
 	void Jump()
 	{
-		rig.AddForce(Vector3.up * jumpSpeed);
-		canJump = false;
+        //rig.AddForce(Vector3.up * jumpSpeed);
+        playerAnimator.SetTrigger("Jump");
+        canJump = false;
     }
 
     private void OnSignalCollisionEnter(CollisionSignal signal, Collision other)
@@ -124,7 +145,13 @@ public class CFFusedPlayer : MonoBehaviour
     {
         if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Player")
         {
-            rig.useGravity = true;
+            //rig.useGravity = true;
         }
+    }
+
+    public void OnEndJump()
+    {
+        playerAnimator.SetTrigger("EndJump");
+        rig.useGravity = true;
     }
 }

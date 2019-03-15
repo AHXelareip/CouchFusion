@@ -25,6 +25,14 @@ public class CFPlayer : MonoBehaviour
     public CFPlayerAnimController animatorController;
     public CollisionSignal collisionSignal;
 
+    public Vector3 position
+    {
+        get
+        {
+            return soloGo.transform.position + Vector3.up;
+        }
+    }
+
     private void Start()
     {
         collisionSignal.collisionEnter += OnSignalCollisionEnter;
@@ -38,6 +46,7 @@ public class CFPlayer : MonoBehaviour
         collisionSignal.collisionEnter -= OnSignalCollisionEnter;
         collisionSignal.collisionExit -= OnSignalCollisionExit;
         collisionSignal.collisionStay += OnSignalCollisionStay;
+        animatorController.OnEndJump -= OnEndJump;
     }
 
     void Update ()
@@ -47,32 +56,37 @@ public class CFPlayer : MonoBehaviour
         
         currentSpeed = Input.GetAxis("P" + playerId + "_Horizontal") * speed;
 
-        if (currentSpeed > 0)
-		{
-			soloGo.transform.rotation = Quaternion.LookRotation(Vector3.back);
-		}
-		else if (currentSpeed < 0)
-		{
-			soloGo.transform.rotation = Quaternion.LookRotation(Vector3.forward);
-		}
+        if (ShouldFreeze() == false)
+        {
+            if (currentSpeed > 0)
+            {
+                soloGo.transform.rotation = Quaternion.LookRotation(Vector3.back);
+            }
+            else if (currentSpeed < 0)
+            {
+                soloGo.transform.rotation = Quaternion.LookRotation(Vector3.forward);
+            }
+        }
 		
         if (fused == false)
         {
             if (canJump == false)
             {
                 currentSpeed = Input.GetAxis("P" + playerId + "_Horizontal") * jumpSpeed;
-                AnimatorTransitionInfo transitionInfo = playerAnimator.GetAnimatorTransitionInfo(0);
-                
-                if (transitionInfo.duration == 0)
+
+                if (ShouldFreeze() == false)
                 {
                     soloGo.transform.position += currentSpeed * Time.deltaTime * Vector3.right;
                 }
-                playerAnimator.SetBool("Walk", false);
+
+                playerAnimator.SetBool("Walk", Mathf.Abs(currentSpeed) > 0.001f);
+                playerAnimator.SetFloat("Speed", ShouldFreeze() ? 0.0f : 1.0f);
+                playerAnimator.SetFloat("StickSpeed", currentSpeed);
             }
             else
             {
                 playerAnimator.SetBool("Walk", Mathf.Abs(currentSpeed) > 0.001f);
-                playerAnimator.SetFloat("Speed", Mathf.Abs(currentSpeed));
+                playerAnimator.SetFloat("Speed", ShouldFreeze() ? 0.0f : Mathf.Abs(currentSpeed));
             }
         }
 		
@@ -88,7 +102,10 @@ public class CFPlayer : MonoBehaviour
 
 		if (Input.GetButtonDown("P" + playerId + "_Fuse"))
 		{
-			fuseTime = Time.time;
+            if (FuseCD() == 0.0f)
+            {
+                fuseTime = Time.time;
+            }
 		}
 
 		unfuse = Input.GetButtonDown("P" + playerId + "_Unfuse");
@@ -115,7 +132,7 @@ public class CFPlayer : MonoBehaviour
     {
         if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Player")
         {
-            rig.useGravity = false;
+            //rig.useGravity = false;
         }
     }
 
@@ -130,6 +147,21 @@ public class CFPlayer : MonoBehaviour
     public void OnEndJump()
     {
         playerAnimator.SetTrigger("EndJump");
-        rig.useGravity = true;
+        //rig.useGravity = true;
+    }
+
+    public bool IsWaitingForFuse()
+    {
+        return Time.time - fuseTime < CFFusionManager.Instance.fuseSyncTime;
+    }
+
+    public bool ShouldFreeze()
+    {
+        return CFFusionManager.Instance.freezeFuse ? IsWaitingForFuse() : false;
+    }
+
+    public float FuseCD()
+    {
+        return CFFusionManager.Instance.fuseKeepPress ? 0.0f : Mathf.Max(0.0f, fuseTime + CFFusionManager.Instance.fuseSyncCD - Time.time);
     }
 }
