@@ -5,9 +5,18 @@ using UnityEngine;
 public class CFCamera : MonoBehaviour
 {
     public GameObject cameraHolder;
-    
-	void Update ()
+    public Camera normalCam;
+    public CFSplitCamManager splitCamManager;
+    public float splitDist;
+    public bool useSplit;
+
+    void Update ()
     {
+        useSplit = splitDist < Vector3.Distance(splitCamManager.splitCam1.target.transform.position, splitCamManager.splitCam2.target.transform.position);
+
+        normalCam.enabled = !useSplit;
+        //splitCamManager.enabled = useSplit;
+
         if (CFFusionManager.Instance.fusedPlayers.Count == 1)
         {
             cameraHolder.transform.position = CFFusionManager.Instance.fusedPlayers[0].transform.position;
