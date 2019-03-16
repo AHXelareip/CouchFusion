@@ -12,7 +12,9 @@ public class CFPlayer : MonoBehaviour
 
 	public bool fused;
 
-	public float currentSpeed;
+    public float height;
+    public float fallSpeed;
+    public float currentSpeed;
 	public float jumpTime;
 	public float fuseTime;
 	public bool unfuse;
@@ -24,6 +26,8 @@ public class CFPlayer : MonoBehaviour
 	public Animator playerAnimator;
     public CFPlayerAnimController animatorController;
     public CollisionSignal collisionSignal;
+    public CollisionLister collisionLister;
+    public Collider playerCollider;
 
     public Vector3 position
     {
@@ -67,16 +71,31 @@ public class CFPlayer : MonoBehaviour
                 soloGo.transform.rotation = Quaternion.LookRotation(Vector3.forward);
             }
         }
-		
+
+        canJump = CanJump();
+
         if (fused == false)
         {
+            //canJump = Physics.Raycast(soloGo.transform.position, Vector3.down, 0.1f);
+            if (canJump == false)
+            {
+                //RaycastHit hit;
+                //if (Physics.Raycast(soloGo.transform.position, Vector3.up, out hit, height))
+                //{
+                //    soloGo.transform.position += Vector3.up * hit.distance;
+                //    canJump = true;
+                //}
+            }
+            
+            playerAnimator.SetBool("Falling", !canJump);
             if (canJump == false)
             {
                 currentSpeed = Input.GetAxis("P" + playerId + "_Horizontal") * jumpSpeed;
 
                 if (ShouldFreeze() == false)
                 {
-                    soloGo.transform.position += currentSpeed * Time.deltaTime * Vector3.right;
+                    soloGo.transform.position += CanMove(currentSpeed * Time.deltaTime) * Vector3.right;
+                    soloGo.transform.position += fallSpeed * Time.deltaTime * Vector3.down;
                 }
 
                 playerAnimator.SetBool("Walk", Mathf.Abs(currentSpeed) > 0.001f);
@@ -109,14 +128,60 @@ public class CFPlayer : MonoBehaviour
 		}
 
 		unfuse = Input.GetButtonDown("P" + playerId + "_Unfuse");
-	}
+    }
 
-	private void Jump()
+    private float CanMove(float target)
+    {
+        float result = target;
+        foreach (Collider coll in collisionLister.currentCollisions)
+        {
+            // Hit above or below
+            if (Mathf.Abs(coll.bounds.center.y - playerCollider.bounds.center.y) > (coll.bounds.extents.y + playerCollider.bounds.extents.y))
+            {
+                continue;
+            }
+            // Hit behind
+            if (target * (coll.bounds.center.x - playerCollider.bounds.center.x) < 0)
+            {
+                continue;
+            }
+            if (target > 0)
+            {
+                result = Mathf.Min(result, (coll.bounds.center.x - playerCollider.bounds.center.x) - (coll.bounds.extents.x + playerCollider.bounds.extents.x));
+            }
+            else
+            {
+                result = Mathf.Max(result, (coll.bounds.center.x - playerCollider.bounds.center.x) + (coll.bounds.extents.x + playerCollider.bounds.extents.x));
+            }
+        }
+        return result;
+    }
+
+    private bool CanJump()
+    {
+        foreach (Collider coll in collisionLister.currentCollisions)
+        {
+            // Hit above or below
+            if (Mathf.Abs(coll.bounds.center.x - playerCollider.bounds.center.x) > (coll.bounds.extents.x + playerCollider.bounds.extents.x))
+            {
+                continue;
+            }
+
+            if ((coll.bounds.center.x - playerCollider.bounds.center.x) - (coll.bounds.extents.x + playerCollider.bounds.extents.x) < 0)
+            {
+                return true;
+            }
+                
+        }
+        return false;
+    }
+
+    private void Jump()
 	{
 		if (fused == false)
 		{
             playerAnimator.SetTrigger("Jump");
-			canJump = false;
+			//canJump = false;
 		}
 	}
 
@@ -124,7 +189,7 @@ public class CFPlayer : MonoBehaviour
 	{
 		if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Player")
 		{
-			canJump = true;
+			//canJump = true;
 		}
 	}
 
@@ -132,7 +197,7 @@ public class CFPlayer : MonoBehaviour
     {
         if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Player")
         {
-            //rig.useGravity = false;
+            //canJump = true;
         }
     }
 
@@ -140,7 +205,7 @@ public class CFPlayer : MonoBehaviour
     {
         if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Player")
         {
-            //rig.useGravity = true;
+            //canJump = false;
         }
     }
 
