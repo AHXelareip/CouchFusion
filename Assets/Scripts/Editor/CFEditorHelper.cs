@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
@@ -30,7 +31,7 @@ public class CFEditorHelper : EditorWindow
 
     void InitWindow()
     {
-        levels = AssetDatabase.FindAssets("", new string[] { sceneFolder });
+        RefreshLevels();
     }
 
     void InitSkin()
@@ -49,7 +50,13 @@ public class CFEditorHelper : EditorWindow
             EditorSceneManager.OpenScene("Assets/Scenes/MainMenu.unity", OpenSceneMode.Single);
         }
 
+        EditorGUILayout.BeginHorizontal();
         foldLevels = EditorGUILayout.Foldout(foldLevels, "Levels");
+        if (GUILayout.Button("Refresh"))
+        {
+            RefreshLevels();
+        }
+        EditorGUILayout.EndHorizontal();
         if (foldLevels)
         {
             for (int i = 0; i < levels.Length; ++i)
@@ -72,5 +79,31 @@ public class CFEditorHelper : EditorWindow
     {
         EditorSceneManager.OpenScene("Assets/Scenes/PlayableScene.unity", OpenSceneMode.Single);
         EditorSceneManager.OpenScene(sceneFolder + "/" + name + ".unity", OpenSceneMode.Additive);
+    }
+
+    void RefreshLevels()
+    {
+        List<EditorBuildSettingsScene> editorBuildSettingsScenes = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
+        levels = AssetDatabase.FindAssets("", new string[] { sceneFolder });
+
+        foreach (string level in levels)
+        {
+            bool found = false;
+            foreach (EditorBuildSettingsScene scene in editorBuildSettingsScenes)
+            {
+                if (scene.guid.ToString() == level)
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found == false)
+            {
+                editorBuildSettingsScenes.Add(new EditorBuildSettingsScene(AssetDatabase.GUIDToAssetPath(level), true));
+            }
+        }
+
+        EditorBuildSettings.scenes = editorBuildSettingsScenes.ToArray();
     }
 }
