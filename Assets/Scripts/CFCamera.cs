@@ -17,6 +17,7 @@ public class CFCamera : MonoBehaviour
 
         normalCam.enabled = !useSplit;
         splitCamManager.enabled = useSplit;
+        splitCamManager.mainCam.enabled = useSplit;
 
         uiCanvas.worldCamera = Camera.current;
 

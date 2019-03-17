@@ -19,8 +19,23 @@ EditorBuildSettings:
     guid: a494c33122dfff446bb15f99fc1d3b64
   - enabled: 1
     path: Assets/Scenes/Levels/Gym 1.unity
-    guid: f53a5ea6fc78d854b94a258d31761ff2
+    guid: 79ce42f21f7c17849933a377b5265534
   - enabled: 1
     path: Assets/Scenes/Levels/Gym 2.unity
-    guid: 995e7a58435bf98448177410c6d10c61
+    guid: 8a984b25660f84d43b263d2ba79192db
+  - enabled: 1
+    path: Assets/Scenes/Levels/Gym 3.unity
+    guid: cd0226628da74bb41a9c164f0eedc36b
+  - enabled: 1
+    path: Assets/Scenes/Levels/Gym 4.unity
+    guid: 2e789776fed46b14a9c3274eb3fab86c
+  - enabled: 1
+    path: Assets/Scenes/Levels/Gym 5.unity
+    guid: 7e4b888bdb1fb984582bf861ae8560e5
+  - enabled: 1
+    path: Assets/Scenes/Levels/Gym 6.unity
+    guid: bbb2635b8914a8643a0c8c9c3fb4633b
+  - enabled: 1
+    path: Assets/Scenes/Levels/Gym 7.unity
+    guid: 4a047c68884df004598b8bd612dbee80
   m_configObjects: {}
