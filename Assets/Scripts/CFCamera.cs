@@ -9,13 +9,16 @@ public class CFCamera : MonoBehaviour
     public CFSplitCamManager splitCamManager;
     public float splitDist;
     public bool useSplit;
+    public Canvas uiCanvas;
 
     void Update ()
     {
         useSplit = splitDist < Vector3.Distance(splitCamManager.splitCam1.target.transform.position, splitCamManager.splitCam2.target.transform.position);
 
         normalCam.enabled = !useSplit;
-        //splitCamManager.enabled = useSplit;
+        splitCamManager.enabled = useSplit;
+
+        uiCanvas.worldCamera = Camera.current;
 
         if (CFFusionManager.Instance.fusedPlayers.Count == 1)
         {
