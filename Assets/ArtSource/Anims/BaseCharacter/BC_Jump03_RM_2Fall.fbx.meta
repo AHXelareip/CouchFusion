@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a1febbd8f5fdd9f4b9e3a7f9441d29d7
+guid: 98cf60694e95b8849a1b2a0709e9e951
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -261,7 +261,7 @@ ModelImporter:
     400252: UpperBody
     400254: Weapon_L
     400256: Weapon_R
-    7400000: Take 001
+    7400000: Jump_RM_2_Fall
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -283,7 +283,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -292,10 +292,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Take 001
-      takeName: Take 001
+      name: Jump_RM_2_Fall
+      takeName: BaseCharacter_Jump02_2Fall_RootMotion
       firstFrame: 0
-      lastFrame: 26
+      lastFrame: 20
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -306,7 +306,7 @@ ModelImporter:
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 1
-      loopBlendPositionXZ: 0
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 0
       keepOriginalPositionY: 0
       keepOriginalPositionXZ: 0

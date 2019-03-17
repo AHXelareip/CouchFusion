@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4c30767b0f65b4047bfa42130093439a
+guid: 4dc29abe00a7c744ca5630426516f81a
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -261,7 +261,8 @@ ModelImporter:
     400252: UpperBody
     400254: Weapon_L
     400256: Weapon_R
-    7400000: Take 001
+    7400000: BaseCharacter_Jump03_RootMotion_1Init
+    7400002: Jump_RM_1_Init
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -292,10 +293,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Take 001
-      takeName: Take 001
-      firstFrame: 15
-      lastFrame: 33
+      name: Jump_RM_1_Init
+      takeName: BaseCharacter_Jump02_1Start_RootMotion
+      firstFrame: 0
+      lastFrame: 14
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -313,67 +314,8 @@ ModelImporter:
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves:
-      - name: Horizontal
-        curve:
-          serializedVersion: 2
-          curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 0.39427313
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 0.6083333
-            value: 1.0019245
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0.33333334
-          - serializedVersion: 3
-            time: 0.79955953
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          preInfinity: 3
-          postInfinity: 3
-          rotationOrder: 4
-      events:
-      - time: 1
-        functionName: EndJump
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      curves: []
+      events: []
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
