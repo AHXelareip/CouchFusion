@@ -247,33 +247,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 4933971136195464, guid: ffeca94c7fbfc6f4eaf6f6da47af77c0, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 2.95
-      objectReference: {fileID: 0}
-    - target: {fileID: 54415466653802032, guid: ffeca94c7fbfc6f4eaf6f6da47af77c0,
-        type: 2}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 114145841088580846, guid: ffeca94c7fbfc6f4eaf6f6da47af77c0,
         type: 2}
-      propertyPath: playerCollider
-      value: 
-      objectReference: {fileID: 789386465}
-    - target: {fileID: 114145841088580846, guid: ffeca94c7fbfc6f4eaf6f6da47af77c0,
-        type: 2}
-      propertyPath: collisionLister
-      value: 
-      objectReference: {fileID: 789386468}
-    - target: {fileID: 4933971136195464, guid: ffeca94c7fbfc6f4eaf6f6da47af77c0, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 6.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 114145841088580846, guid: ffeca94c7fbfc6f4eaf6f6da47af77c0,
-        type: 2}
-      propertyPath: canJump
-      value: 0
+      propertyPath: fallSpeed
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ffeca94c7fbfc6f4eaf6f6da47af77c0, type: 2}
@@ -709,33 +686,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &789386461 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1787822637156260, guid: ffeca94c7fbfc6f4eaf6f6da47af77c0,
-    type: 2}
-  m_PrefabInternal: {fileID: 205007162}
---- !u!65 &789386465 stripped
-BoxCollider:
-  m_CorrespondingSourceObject: {fileID: 65823538400715018, guid: ffeca94c7fbfc6f4eaf6f6da47af77c0,
-    type: 2}
-  m_PrefabInternal: {fileID: 205007162}
 --- !u!4 &789386466 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4933971136195464, guid: ffeca94c7fbfc6f4eaf6f6da47af77c0,
     type: 2}
   m_PrefabInternal: {fileID: 205007162}
---- !u!114 &789386468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 789386461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64bd01e0838d1a944b09aa3eb469422f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentCollisions: []
 --- !u!1 &971100532
 GameObject:
   m_ObjectHideFlags: 0
@@ -1324,6 +1279,16 @@ Prefab:
         type: 2}
       propertyPath: canJump
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 54415466653802032, guid: ffeca94c7fbfc6f4eaf6f6da47af77c0,
+        type: 2}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114145841088580846, guid: ffeca94c7fbfc6f4eaf6f6da47af77c0,
+        type: 2}
+      propertyPath: fallSpeed
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ffeca94c7fbfc6f4eaf6f6da47af77c0, type: 2}
