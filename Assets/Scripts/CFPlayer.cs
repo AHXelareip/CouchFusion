@@ -84,11 +84,6 @@ public class CFPlayer : MonoBehaviour
                 if (ShouldFreeze() == false)
                 {
                     soloGo.transform.position += CanMove(currentSpeed * Time.deltaTime) * Vector3.right;
-                    AnimatorStateInfo stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
-                    if (stateInfo.IsName("Fall"))
-                    {
-                        soloGo.transform.position += fallSpeed * Time.deltaTime * Vector3.down;
-                    }
                 }
 
                 playerAnimator.SetBool("Walk", Mathf.Abs(currentSpeed) > 0.001f);
