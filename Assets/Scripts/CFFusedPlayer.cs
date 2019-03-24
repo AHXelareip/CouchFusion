@@ -8,6 +8,7 @@ public class CFFusedPlayer : MonoBehaviour
 {
 	public float jumpSyncTime;
 	public float jumpSpeed;
+    public float fallSpeed;
 	
 	public List<CFPlayer> fusedPlayers = new List<CFPlayer>();
 	public bool canJump;
@@ -18,12 +19,19 @@ public class CFFusedPlayer : MonoBehaviour
     public Animator playerAnimator;
     public CFPlayerAnimController animatorController;
     public CollisionSignal collisionSignal;
+    public CollisionLister collisionLister;
+    public Collider playerCollider;
 
     void Start()
 	{
 		fusedPlayers[0].fused = true;
 		fusedPlayers[1].fused = true;
 		visual.transform.position = (fusedPlayers[0].soloGo.transform.position + fusedPlayers[1].soloGo.transform.position) / 2;
+
+        RaycastHit hit;
+        Physics.Raycast(visual.transform.position, Vector3.down, out hit, 5.0f);
+
+        visual.transform.position += (5.0f - hit.distance) * Vector3.up;
 
         collisionSignal.collisionEnter += OnSignalCollisionEnter;
         collisionSignal.collisionExit += OnSignalCollisionExit;
@@ -100,36 +108,81 @@ public class CFFusedPlayer : MonoBehaviour
 			Jump();
 		}
 
+        playerAnimator.SetBool("Falling", !canJump);
+        float currentSpeed = move;
         if (canJump == false)
         {
-            AnimatorTransitionInfo transitionInfo = playerAnimator.GetAnimatorTransitionInfo(0);
+            currentSpeed *= jumpSpeed;
+            visual.transform.position += CanMove(currentSpeed * Time.deltaTime) * Vector3.right;
+            visual.transform.position += fallSpeed * Time.deltaTime * Vector3.down;
 
-            if (transitionInfo.duration == 0)
-            {
-                visual.transform.position += jumpSpeed * move * Time.deltaTime * Vector3.right;
-            }
-            playerAnimator.SetBool("Walk", false);
+            playerAnimator.SetBool("Walk", Mathf.Abs(currentSpeed) > 0.001f);
             playerAnimator.SetFloat("Speed", 1.0f);
+            playerAnimator.SetFloat("StickSpeed", currentSpeed);
         }
         else
         {
-            playerAnimator.SetBool("Walk", Mathf.Abs(move) > 0.001f);
-            playerAnimator.SetFloat("Speed", Mathf.Abs(move));
+            playerAnimator.SetBool("Walk", Mathf.Abs(currentSpeed) > 0.001f);
+            playerAnimator.SetFloat("Speed", Mathf.Abs(currentSpeed));
         }
     }
 
-	void Jump()
-	{
-        //rig.AddForce(Vector3.up * jumpSpeed);
+    private float CanMove(float target)
+    {
+        float result = target;
+        foreach (Collider coll in collisionLister.currentCollisions)
+        {
+            // Hit above or below
+            if (Mathf.Abs(coll.bounds.center.y - playerCollider.bounds.center.y) > (coll.bounds.extents.y + playerCollider.bounds.extents.y))
+            {
+                continue;
+            }
+            // Hit behind
+            if (target * (coll.bounds.center.x - playerCollider.bounds.center.x) < 0)
+            {
+                continue;
+            }
+            if (target > 0)
+            {
+                result = Mathf.Min(result, (coll.bounds.center.x - playerCollider.bounds.center.x) - (coll.bounds.extents.x + playerCollider.bounds.extents.x));
+            }
+            else
+            {
+                result = Mathf.Max(result, (coll.bounds.center.x - playerCollider.bounds.center.x) + (coll.bounds.extents.x + playerCollider.bounds.extents.x));
+            }
+        }
+        return result;
+    }
+
+    private bool CanJump()
+    {
+        foreach (Collider coll in collisionLister.currentCollisions)
+        {
+            // Hit above or below
+            if (Mathf.Abs(coll.bounds.center.x - playerCollider.bounds.center.x) > (coll.bounds.extents.x + playerCollider.bounds.extents.x))
+            {
+                continue;
+            }
+
+            if ((coll.bounds.center.x - playerCollider.bounds.center.x) - (coll.bounds.extents.x + playerCollider.bounds.extents.x) < 0)
+            {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    private void Jump()
+    {
         playerAnimator.SetTrigger("Jump");
-        canJump = false;
     }
 
     private void OnSignalCollisionEnter(CollisionSignal signal, Collision other)
     {
         if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Player")
         {
-            canJump = true;
+            //canJump = true;
         }
     }
 
@@ -137,7 +190,7 @@ public class CFFusedPlayer : MonoBehaviour
     {
         if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Player")
         {
-            rig.useGravity = false;
+            //canJump = true;
         }
     }
 
@@ -145,13 +198,13 @@ public class CFFusedPlayer : MonoBehaviour
     {
         if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Player")
         {
-            //rig.useGravity = true;
+            //canJump = false;
         }
     }
 
     public void OnEndJump()
     {
         playerAnimator.SetTrigger("EndJump");
-        rig.useGravity = true;
+        //rig.useGravity = true;
     }
 }

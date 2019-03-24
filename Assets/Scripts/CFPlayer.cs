@@ -76,26 +76,19 @@ public class CFPlayer : MonoBehaviour
 
         if (fused == false)
         {
-            //canJump = Physics.Raycast(soloGo.transform.position, Vector3.down, 0.1f);
-            if (canJump == false)
-            {
-                //RaycastHit hit;
-                //if (Physics.Raycast(soloGo.transform.position, Vector3.up, out hit, height))
-                //{
-                //    soloGo.transform.position += Vector3.up * hit.distance;
-                //    canJump = true;
-                //}
-            }
-            
             playerAnimator.SetBool("Falling", !canJump);
             if (canJump == false)
             {
                 currentSpeed = Input.GetAxis("P" + playerId + "_Horizontal") * jumpSpeed;
-
+                
                 if (ShouldFreeze() == false)
                 {
                     soloGo.transform.position += CanMove(currentSpeed * Time.deltaTime) * Vector3.right;
-                    soloGo.transform.position += fallSpeed * Time.deltaTime * Vector3.down;
+                    AnimatorStateInfo stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
+                    if (stateInfo.IsName("Fall"))
+                    {
+                        soloGo.transform.position += fallSpeed * Time.deltaTime * Vector3.down;
+                    }
                 }
 
                 playerAnimator.SetBool("Walk", Mathf.Abs(currentSpeed) > 0.001f);
