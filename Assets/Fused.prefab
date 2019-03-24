@@ -1523,9 +1523,10 @@ GameObject:
   - component: {fileID: 4933971136195464}
   - component: {fileID: 95618479539089258}
   - component: {fileID: 54415466653802032}
-  - component: {fileID: 136822176669024508}
   - component: {fileID: 114859601418624450}
   - component: {fileID: 114748432506675576}
+  - component: {fileID: 114251059788069408}
+  - component: {fileID: 65490145108055280}
   m_Layer: 0
   m_Name: PlayerObj
   m_TagString: Untagged
@@ -3892,8 +3893,20 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 72
+  m_Constraints: 120
   m_CollisionDetection: 0
+--- !u!65 &65490145108055280
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1787822637156260}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.85, z: 1}
+  m_Center: {x: 0, y: 0.425, z: 0}
 --- !u!95 &95618479539089258
 Animator:
   serializedVersion: 3
@@ -3912,6 +3925,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &114251059788069408
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1787822637156260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64bd01e0838d1a944b09aa3eb469422f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentCollisions: []
 --- !u!114 &114261916022884340
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3925,6 +3950,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpSyncTime: 0.5
   jumpSpeed: 4
+  fallSpeed: 0
   fusedPlayers: []
   canJump: 0
   rig: {fileID: 54415466653802032}
@@ -3932,6 +3958,8 @@ MonoBehaviour:
   playerAnimator: {fileID: 95618479539089258}
   animatorController: {fileID: 114748432506675576}
   collisionSignal: {fileID: 114859601418624450}
+  collisionLister: {fileID: 114251059788069408}
+  playerCollider: {fileID: 65490145108055280}
 --- !u!114 &114748432506675576
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3954,19 +3982,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ac2f6d887c06bd41bf94d2b7497bd9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!136 &136822176669024508
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1787822637156260}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.15
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!137 &137653987071446112
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
