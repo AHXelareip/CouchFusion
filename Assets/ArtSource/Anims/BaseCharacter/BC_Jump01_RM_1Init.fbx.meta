@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1d029800624192f4cb69d23ddb14404d
+guid: 4dc29abe00a7c744ca5630426516f81a
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -261,7 +261,8 @@ ModelImporter:
     400252: UpperBody
     400254: Weapon_L
     400256: Weapon_R
-    7400000: Jump_RM_3_Land
+    7400000: BaseCharacter_Jump03_RootMotion_1Init
+    7400002: Jump_RM_1_Init
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -292,10 +293,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Jump_RM_3_Land
-      takeName: BaseCharacter_Jump02_3Land_RootMotion
+      name: Jump_RM_1_Init
+      takeName: BaseCharacter_Jump02_1Start_RootMotion
       firstFrame: 0
-      lastFrame: 10
+      lastFrame: 8
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -308,7 +309,7 @@ ModelImporter:
       loopBlendPositionY: 0
       loopBlendPositionXZ: 1
       keepOriginalOrientation: 0
-      keepOriginalPositionY: 0
+      keepOriginalPositionY: 1
       keepOriginalPositionXZ: 1
       heightFromFeet: 0
       mirror: 0

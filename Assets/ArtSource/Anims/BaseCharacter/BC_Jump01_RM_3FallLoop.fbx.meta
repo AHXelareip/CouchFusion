@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4dc29abe00a7c744ca5630426516f81a
+guid: 98cf60694e95b8849a1b2a0709e9e951
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -261,8 +261,7 @@ ModelImporter:
     400252: UpperBody
     400254: Weapon_L
     400256: Weapon_R
-    7400000: BaseCharacter_Jump03_RootMotion_1Init
-    7400002: Jump_RM_1_Init
+    7400000: Jump_RM_3_FallLoop
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -293,24 +292,24 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Jump_RM_1_Init
-      takeName: BaseCharacter_Jump02_1Start_RootMotion
+      name: Jump_RM_3_FallLoop
+      takeName: BaseCharacter_Jump02_2Fall_RootMotion
       firstFrame: 0
-      lastFrame: 14
+      lastFrame: 20
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 1
       keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 1
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 0
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
